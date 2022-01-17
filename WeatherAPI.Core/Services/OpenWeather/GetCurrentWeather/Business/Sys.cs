@@ -7,7 +7,7 @@
         public string Country { get; }
         public int Sunrise { get; }
         public int Sunset { get; }
-        public Sys(int type,int id,string country,int sunrise,int sunset)
+        public Sys(int type, int id, string country, int sunrise, int sunset)
         {
             this.Type = type;
             this.Id = id;

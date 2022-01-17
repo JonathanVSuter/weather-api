@@ -8,11 +8,11 @@ namespace WeatherAPI.Core.Commands.OpenWeatherApiCommands
     {
         public CurrentLocalWeather CurrentLocalWeather { get; set; }
 
-        public GetByCityNameCurrentWeatherCommand(CurrentLocalWeather currentLocalWeather) 
+        public GetByCityNameCurrentWeatherCommand(CurrentLocalWeather currentLocalWeather)
         {
             if (currentLocalWeather is null)
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather)} is null");
-            if(currentLocalWeather.Clouds is null)
+            if (currentLocalWeather.Clouds is null)
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather.Clouds)} is null");
             if (currentLocalWeather.Coord is null)
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather.Coord)} is null");

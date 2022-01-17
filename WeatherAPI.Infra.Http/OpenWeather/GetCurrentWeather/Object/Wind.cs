@@ -11,6 +11,6 @@ namespace WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Object
         public int Deg { get; set; }
 
         [JsonProperty("gust")]
-        public double Gust {get;set;}
+        public double Gust { get; set; }
     }
 }

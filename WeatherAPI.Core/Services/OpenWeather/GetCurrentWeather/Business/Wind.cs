@@ -6,7 +6,7 @@
         public int Deg { get; }
         public double Gust { get; }
 
-        public Wind(double speed,int deg,double gust)
+        public Wind(double speed, int deg, double gust)
         {
             this.Speed = speed;
             this.Deg = deg;

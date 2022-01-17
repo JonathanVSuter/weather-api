@@ -8,7 +8,7 @@
         public double TempMax { get; }
         public int Pressure { get; }
         public int Humidity { get; }
-        public Main(double temp,double feelsLike,double tempMin,double tempMax,int pressure,int humidity)
+        public Main(double temp, double feelsLike, double tempMin, double tempMax, int pressure, int humidity)
         {
             this.Temp = temp;
             this.FeelsLike = feelsLike;

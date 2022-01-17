@@ -15,7 +15,7 @@ namespace WeatherAPI.HostedServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IRequestExecutor _requestExecutor;
-        private readonly TimeSpan _timeSpanTask = TimeSpan.FromMinutes(15); 
+        private readonly TimeSpan _timeSpanTask = TimeSpan.FromMinutes(15);
         public WeatherApiHostedService(IUnitOfWork unitOfWork, ICommandDispatcher commandDispatcher, IRequestExecutor requestExecutor)
         {
             _unitOfWork = unitOfWork;

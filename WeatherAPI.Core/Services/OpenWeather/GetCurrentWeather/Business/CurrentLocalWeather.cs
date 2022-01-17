@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
@@ -19,10 +17,10 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
         public int Id { get; }
         public string Name { get; }
         public int Cod { get; }
-        public CurrentLocalWeather(Coord coord,List<Weather> weather, Main main,int visibility,Wind wind,Clouds clouds,int dt,Sys sys,int timezone,int id,string name,int cod)
+        public CurrentLocalWeather(Coord coord, List<Weather> weather, Main main, int visibility, Wind wind, Clouds clouds, int dt, Sys sys, int timezone, int id, string name, int cod)
         {
             this.Coord = coord;
-            this.Weather = weather;            
+            this.Weather = weather;
             this.Main = main;
             this.Visibility = visibility;
             this.Wind = wind;

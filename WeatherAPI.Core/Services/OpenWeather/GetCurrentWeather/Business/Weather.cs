@@ -1,8 +1,8 @@
 ﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
     public class Weather
-    {        
-        public Weather(int id,string main,string description,string icon)
+    {
+        public Weather(int id, string main, string description, string icon)
         {
             this.Id = id;
             this.Main = main;
