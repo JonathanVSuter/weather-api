@@ -8,7 +8,7 @@ using WeatherAPI.Core.Configuration;
 namespace WeatherAPI
 {
     /***********************************************some usefull tips***********************************************
-    ver como disparar o background service 
+        background service 
 
         how to get data from appsettings
         https://stackoverflow.com/questions/31453495/how-to-read-appsettings-values-from-a-json-file-in-asp-net-core  

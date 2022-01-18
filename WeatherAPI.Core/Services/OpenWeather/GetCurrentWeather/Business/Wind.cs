@@ -8,9 +8,9 @@
 
         public Wind(double speed, int deg, double gust)
         {
-            this.Speed = speed;
-            this.Deg = deg;
-            this.Gust = gust;
+            Speed = speed;
+            Deg = deg;
+            Gust = gust;
         }
     }
 

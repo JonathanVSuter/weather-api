@@ -9,7 +9,7 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 {
     public static class OpenWeatherApiServiceExtensions
     {
-        public static CurrentLocalWeatherDto AsDto(this GetCurrentWeatherObject getCurrentWeatherObject)
+        public static CurrentLocalWeatherDto AsDto(this CurrentLocalWeatherObject getCurrentWeatherObject)
         {
             if (getCurrentWeatherObject is null)
             {
@@ -61,12 +61,12 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
                 TempMin = main.TempMin
             };
         }
-        public static CoordDto CoordToDto(Coord coord)
+        public static CoordinateDto CoordToDto(Coord coord)
         {
             if (coord is null)
                 throw new ArgumentNullException(nameof(coord));
 
-            return new CoordDto()
+            return new CoordinateDto()
             {
                 Lat = coord.Lat,
                 Lon = coord.Lon

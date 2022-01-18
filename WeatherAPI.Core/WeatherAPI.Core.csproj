@@ -9,7 +9,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Enumerators\" />
     <Folder Include="Queries\OpenWeatherApi\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

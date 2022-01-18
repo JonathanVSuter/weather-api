@@ -5,7 +5,7 @@
         public int All { get; }
         public Clouds(int all)
         {
-            this.All = all;
+            All = all;
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Object
 {
-    public class GetCurrentWeatherObject
+    public class CurrentLocalWeatherObject
     {
 
         [JsonProperty("coord")]

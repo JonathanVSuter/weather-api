@@ -30,7 +30,7 @@ namespace WeatherAPI.Infra.Http.OpenWeather
             }
 
             var json = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var weather = JsonConvert.DeserializeObject<GetCurrentWeatherObject>(json);
+            var weather = JsonConvert.DeserializeObject<CurrentLocalWeatherObject>(json);
 
             return weather.AsDto();
         }

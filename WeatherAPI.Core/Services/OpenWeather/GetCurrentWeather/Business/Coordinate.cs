@@ -1,13 +1,13 @@
 ﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
-    public class Coord
+    public class Coordinate
     {
         public double Lon { get; }
         public double Lat { get; }
-        public Coord(double lon, double lat)
+        public Coordinate(double lon, double lat)
         {
-            this.Lon = lon;
-            this.Lat = lat;
+            Lon = lon;
+            Lat = lat;
         }
     }
 

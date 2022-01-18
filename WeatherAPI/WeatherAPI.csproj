@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WeatherAPI.Application\WeatherAPI.Application.csproj" />
     <ProjectReference Include="..\WeatherAPI.Core\WeatherAPI.Core.csproj" />
+    <ProjectReference Include="..\WeatherAPI.Infra.Dapper\WeatherAPI.Infra.Dapper.csproj" />
     <ProjectReference Include="..\WeatherAPI.Infra.Http\WeatherAPI.Infra.Http.csproj" />
   </ItemGroup>
 

@@ -34,12 +34,12 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 
             return new Main(main.Temp, main.FeelsLike, main.TempMin, main.TempMax, main.Pressure, main.Humidity);
         }
-        public static Coord CoordToBusiness(CoordDto coord)
+        public static Coordinate CoordToBusiness(CoordinateDto coord)
         {
             if (coord is null)
                 throw new ArgumentNullException(nameof(coord));
 
-            return new Coord(coord.Lon, coord.Lat);
+            return new Coordinate(coord.Lon, coord.Lat);
         }
         public static Clouds CloudsToBusiness(CloudsDto clouds)
         {

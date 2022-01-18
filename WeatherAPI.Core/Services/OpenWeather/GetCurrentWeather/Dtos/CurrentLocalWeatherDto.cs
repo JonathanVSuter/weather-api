@@ -4,7 +4,7 @@ namespace WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos
 {
     public class CurrentLocalWeatherDto
     {
-        public CoordDto Coord { get; set; }
+        public CoordinateDto Coord { get; set; }
         public List<WeatherDto> Weather { get; set; }
         public string Base { get; set; }
         public MainDto Main { get; set; }

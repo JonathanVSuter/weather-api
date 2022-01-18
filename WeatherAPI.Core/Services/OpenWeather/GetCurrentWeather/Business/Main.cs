@@ -10,12 +10,12 @@
         public int Humidity { get; }
         public Main(double temp, double feelsLike, double tempMin, double tempMax, int pressure, int humidity)
         {
-            this.Temp = temp;
-            this.FeelsLike = feelsLike;
-            this.TempMin = tempMin;
-            this.TempMax = tempMax;
-            this.Pressure = pressure;
-            this.Humidity = humidity;
+            Temp = temp;
+            FeelsLike = feelsLike;
+            TempMin = tempMin;
+            TempMax = tempMax;
+            Pressure = pressure;
+            Humidity = humidity;
         }
     }
 
