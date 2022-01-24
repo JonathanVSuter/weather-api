@@ -1,9 +1,9 @@
 ﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
-    public class Clouds
-    {
+    public class Cloud
+    {        
         public int All { get; }
-        public Clouds(int all)
+        public Cloud(int all)
         {
             All = all;
         }

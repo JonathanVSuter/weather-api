@@ -47,8 +47,13 @@ namespace WeatherAPI
                     services.AddTransient<IRequestExecutor, RequestExecutor>();
                     services.AddScoped<IRequestHandler<GetByCityNameRequest, CurrentLocalWeatherDto>, GetByCityNameRequestHandler>();
                     services.AddScoped<ICommandHandler<GetByCityNameCurrentWeatherCommand>, GetByCityNameCurrentWeatherCommandHandler>();
+                    services.AddScoped<IWindRepository, WindRepository>();
                     services.AddScoped<ICloudRepository, CloudRepository>();
-                    services.AddHostedService<WeatherApiHostedService>();
+                    services.AddScoped<IWeatherRepository, WeatherRepository>();
+                    services.AddScoped<ICoordinateRepository, CoordinateRepository>();
+                    services.AddScoped<ICurrentLocalWeatherRepository, CurrentLocalWeatherRepository>();
+                    services.AddScoped<IWeatherRelationshipsFinisherRepository, WeatherRelationshipsFinisherRepository>();
+                    services.AddHostedService<WeatherApiHostedService>();                    
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

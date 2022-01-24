@@ -57,8 +57,7 @@ namespace WeatherAPI.HostedServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IRequestExecutor _requestExecutor;        
-        private readonly TimeSpan _timeSpanTask = TimeSpan.FromSeconds(20);
+        private readonly IRequestExecutor _requestExecutor;                
         public WeatherApiHostedService(IUnitOfWork unitOfWork, ICommandDispatcher commandDispatcher, IRequestExecutor requestExecutor)
         {
             _unitOfWork = unitOfWork;
@@ -73,13 +72,15 @@ namespace WeatherAPI.HostedServices
         {
             try 
             {
-                var request = new GetByCityNameRequest("Florianopolis");
+                var request = new GetByCityNameRequest("Florianópolis");
 
-                var response = await _requestExecutor.ExecuteRequest<GetByCityNameRequest, CurrentLocalWeatherDto>(request).ConfigureAwait(true);
+                await _requestExecutor.ExecuteRequest<GetByCityNameRequest, CurrentLocalWeatherDto>(request).ContinueWith(response => 
+                {
+                    var command = new GetByCityNameCurrentWeatherCommand(response.Result.AsBusiness());
 
-                var command = new GetByCityNameCurrentWeatherCommand(response.AsBusiness());
+                    _commandDispatcher.Dispatch(command);
 
-                _commandDispatcher.Dispatch(command);
+                }).ConfigureAwait(true);
             }
             catch(Exception ex) 
             {
@@ -88,12 +89,11 @@ namespace WeatherAPI.HostedServices
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            //new Timer(GetDataFromWeatherApi, null, TimeSpan.FromSeconds(10), _timeSpanTask);
+        {            
             while (!cancellationToken.IsCancellationRequested)
             {
                 GetDataFromWeatherApi();
-                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
             }
         }
 

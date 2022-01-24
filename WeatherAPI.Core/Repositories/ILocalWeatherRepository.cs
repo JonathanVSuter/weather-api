@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
+using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Core.Repositories
 {
     public interface ICurrentLocalWeatherRepository
     {
-        public bool SaveCurrenLocaltWeather();
+        public int SaveCurrentLocalWeather(int coordinateId, CurrentLocalWeather currentLocalWeatherDto);
     }
 }

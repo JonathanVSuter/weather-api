@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
+namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.DataBaseObject
 {
     public class CurrentLocalWeather
     {
         public Coordinate Coord { get; }
-        public IReadOnlyList<Weather> Weather { get; }
+        public IList<Weather> Weather { get; }
         public string Base { get; }
         public Main Main { get; }
         public int Visibility { get; }

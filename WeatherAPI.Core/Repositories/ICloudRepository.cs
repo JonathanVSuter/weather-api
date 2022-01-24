@@ -7,6 +7,6 @@ namespace WeatherAPI.Core.Repositories
 {
     public interface ICloudRepository
     {
-        public int SaveCloudRepository(Clouds clouds);
+        public int SaveCloud(Cloud clouds);
     }
 }

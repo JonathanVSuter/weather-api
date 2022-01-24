@@ -41,12 +41,12 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 
             return new Coordinate(coord.Lon, coord.Lat);
         }
-        public static Clouds CloudsToBusiness(CloudsDto clouds)
+        public static Cloud CloudsToBusiness(CloudsDto clouds)
         {
             if (clouds is null)
                 throw new ArgumentNullException(nameof(clouds));
 
-            return new Clouds(clouds.All);
+            return new Cloud(clouds.All);
         }
         public static Wind WindToBusiness(WindDto wind)
         {

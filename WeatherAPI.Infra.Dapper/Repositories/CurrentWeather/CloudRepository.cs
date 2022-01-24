@@ -12,30 +12,36 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
     public class CloudRepository : ICloudRepository
     {
         private readonly IOptions<ApiConfiguration> _options;
-        public CloudRepository(IOptions<ApiConfiguration> options) 
+        public CloudRepository(IOptions<ApiConfiguration> options)
         {
             _options = options;
         }
-        public int SaveCloudRepository(Clouds clouds)
+        public int SaveCloud(Cloud clouds)
         {
-            var sql = @"USE [weatherapp.dev]
-                        INSERT INTO[dbo].[Cloud]
-                                   ([Cloudiness]                                   
-                                   ,[CreatedAt]
-                                   ,[LastUpdate])
-                             VALUES
-                                   (@cloudiness
-                                   ,GETDATE()
-                                   ,GETDATE())";
+            var sql = @"BEGIN	
+	                        DECLARE @idCloud INT;	
+	                        SELECT @idCloud = c.Id from Cloud c where c.Cloudiness = @cloudiness
+	                        
+                            IF LEN(ISNULL(CAST(@idCloud AS varchar(50)),'')) = 0
+	                        BEGIN		                        
+		                        INSERT INTO Cloud (Cloudiness, CreatedAt, LastUpdate) OUTPUT Inserted.ID values (@cloudiness, GETDATE(), GETDATE())
+	                        END
+	                        ELSE
+	                        BEGIN
+		                        select @idCloud
+	                        END	
+                        END";
 
-            var parameters = new SqlServerDynamicParameters();
-            parameters.Add("@cloudiness", SqlDbType.Real, ParameterDirection.Input, clouds.All);
-            using var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
-            sqlConnection.Open();
-            var result = sqlConnection.Execute(sql, parameters);
-            sqlConnection.Close();
+            var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
+            using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
+            {
+                cmd.Parameters.AddWithValue("@cloudiness", clouds.All);
+                sqlConnection.Open();
+                var result = (int)cmd.ExecuteScalar();
+                sqlConnection.Close();
+                return result;
+            }
 
-            return result;
         }
     }
 }
