@@ -6,8 +6,8 @@ namespace WeatherAPI.Core.Repositories
 {
     public interface IWeatherRelationshipsFinisherRepository
     {
-        void SaveLocalWeather(int idLocal, IList<int> idWeathers);
-        void SaveLocalWind(int idLocal, int idWind);
-        void SaveLocalCloud(int idLocal, int idCloud);
+        void AttachLocalWeather(int idLocal, IList<int> idWeathers);
+        void AttachLocalWind(int idLocal, int idWind);
+        void AttachLocalCloud(int idLocal, int idCloud);
     }
 }

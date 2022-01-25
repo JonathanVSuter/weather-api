@@ -14,7 +14,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
         {
             _options = options;
         }
-        public void SaveLocalCloud(int idLocal, int idCloud)
+        public void AttachLocalCloud(int idLocal, int idCloud)
         {
             var sql = @"INSERT INTO [dbo].[Local_Cloud]
                                    ([fk_Local_Id]
@@ -41,7 +41,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             };
         }
 
-        public void SaveLocalWeather(int idLocal, IList<int> idWeathers)
+        public void AttachLocalWeather(int idLocal, IList<int> idWeathers)
         {
             var sql = @"INSERT INTO [dbo].[Local_Weather]
                                ([fk_Local_Id]
@@ -73,7 +73,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             }            
         }
 
-        public void SaveLocalWind(int idLocal, int idWind)
+        public void AttachLocalWind(int idLocal, int idWind)
         {
             var sql = @"INSERT INTO [dbo].[Local_Wind]
                                    ([fk_Local_Id]
