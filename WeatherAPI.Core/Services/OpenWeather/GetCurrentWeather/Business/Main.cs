@@ -1,7 +1,7 @@
 ﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
     public class Main
-    {        
+    {
         public double Temp { get; }
         public double FeelsLike { get; }
         public double TempMin { get; }

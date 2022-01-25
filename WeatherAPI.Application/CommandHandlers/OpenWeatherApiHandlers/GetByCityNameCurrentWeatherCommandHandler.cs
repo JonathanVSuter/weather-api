@@ -6,15 +6,15 @@ using WeatherAPI.Core.Repositories;
 namespace WeatherAPI.Application.CommandHandlers.OpenWeatherApiHandlers
 {
     public class GetByCityNameCurrentWeatherCommandHandler : ICommandHandler<GetByCityNameCurrentWeatherCommand>
-    {        
+    {
         private readonly ICurrentWeatherRepository _currentLocalWeatherRepository;
-        public GetByCityNameCurrentWeatherCommandHandler(ICurrentWeatherRepository currentLocalWeatherRepository) 
+        public GetByCityNameCurrentWeatherCommandHandler(ICurrentWeatherRepository currentLocalWeatherRepository)
         {
-            _currentLocalWeatherRepository = currentLocalWeatherRepository;            
+            _currentLocalWeatherRepository = currentLocalWeatherRepository;
         }
 
         public void Handle(GetByCityNameCurrentWeatherCommand command)
-        {   
+        {
             var cloudId = _currentLocalWeatherRepository.SaveCloud(command.CurrentLocalWeather.Clouds);
             var coordinateId = _currentLocalWeatherRepository.SaveCoordinate(command.CurrentLocalWeather.Coord);
             var windId = _currentLocalWeatherRepository.SaveWind(command.CurrentLocalWeather.Wind);

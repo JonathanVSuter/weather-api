@@ -1,4 +1,3 @@
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +7,6 @@ using WeatherAPI.Application.CommandHandlers.OpenWeatherApiHandlers;
 using WeatherAPI.Application.RequestHandlers.OpenWeatherApiHandlers.GetByCityRequestHandler;
 using WeatherAPI.Core.Commands.OpenWeatherApiCommands;
 using WeatherAPI.Core.Common.CommandHandler;
-using WeatherAPI.Core.Common.HostedServices;
 using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Common.RequestHandler;
 using WeatherAPI.Core.Repositories;
@@ -18,7 +16,6 @@ using WeatherAPI.HostedServices;
 using WeatherAPI.Infra.Dapper.Repositories.CurrentWeather;
 using WeatherAPI.Infra.Http.OpenWeather;
 using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
-using WeatherAPI.Modules;
 
 namespace WeatherAPI
 {
@@ -39,7 +36,7 @@ namespace WeatherAPI
                 //    builder.RegisterType<ServicesModule>();
                 //})
                 .ConfigureServices(services =>
-                {                    
+                {
                     services.AddScoped<IOpenWeatherApiServiceGetCurrent, OpenWeatherApiServiceGetCurrent>();
                     services.AddTransient<IQueryExecutor, QueryExecutor>();
                     services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -47,13 +44,8 @@ namespace WeatherAPI
                     services.AddTransient<IRequestExecutor, RequestExecutor>();
                     services.AddScoped<IRequestHandler<GetByCityNameRequest, CurrentLocalWeatherDto>, GetByCityNameRequestHandler>();
                     services.AddScoped<ICommandHandler<GetByCityNameCurrentWeatherCommand>, GetByCityNameCurrentWeatherCommandHandler>();
-                    services.AddScoped<IWindRepository, WindRepository>();
-                    services.AddScoped<ICloudRepository, CloudRepository>();
-                    services.AddScoped<IWeatherRepository, WeatherRepository>();
-                    services.AddScoped<ICoordinateRepository, CoordinateRepository>();
                     services.AddScoped<ICurrentWeatherRepository, CurrentWeatherRepository>();
-                    services.AddScoped<IWeatherRelationshipsFinisherRepository, WeatherRelationshipsFinisherRepository>();
-                    services.AddHostedService<WeatherApiHostedService>();                    
+                    services.AddHostedService<WeatherApiHostedService>();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
