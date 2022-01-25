@@ -1,10 +1,8 @@
 ﻿using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace WeatherAPI.Infra.Dapper.Connections
 {
@@ -16,7 +14,7 @@ namespace WeatherAPI.Infra.Dapper.Connections
         public void Add(string name, SqlDbType sqlServerDbType, ParameterDirection parameterDirection, object value = null, int size = 0)
         {
             SqlParameter sqlParameter;
-            if(size > 0) 
+            if (size > 0)
             {
                 sqlParameter = new SqlParameter();
                 sqlParameter.ParameterName = name;
@@ -25,18 +23,18 @@ namespace WeatherAPI.Infra.Dapper.Connections
                 sqlParameter.Value = value;
                 sqlParameter.Size = size;
             }
-            else 
+            else
             {
                 sqlParameter = new SqlParameter();
                 sqlParameter.ParameterName = name;
                 sqlParameter.SqlDbType = sqlServerDbType;
                 sqlParameter.Direction = parameterDirection;
-                sqlParameter.Value = value;                
+                sqlParameter.Value = value;
             }
             _sqlServerParameters.Add(sqlParameter);
         }
 
-        public void Add(string name, SqlDbType sqlServerDbType, ParameterDirection parameterDirection) 
+        public void Add(string name, SqlDbType sqlServerDbType, ParameterDirection parameterDirection)
         {
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = name;
@@ -51,13 +49,13 @@ namespace WeatherAPI.Infra.Dapper.Connections
 
             var sqlCommand = command as SqlCommand;
 
-            if(sqlCommand != null) 
+            if (sqlCommand != null)
             {
                 sqlCommand.Parameters.AddRange(_sqlServerParameters.ToArray());
             }
         }
-        
-        public T Get<T>(string name) 
+
+        public T Get<T>(string name)
         {
             return (T)_sqlServerParameters.FirstOrDefault(e => e.ParameterName.Equals(name)).Value;
         }

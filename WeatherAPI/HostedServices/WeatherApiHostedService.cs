@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using WeatherAPI.Core.Commands.OpenWeatherApiCommands;
@@ -57,12 +56,12 @@ namespace WeatherAPI.HostedServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IRequestExecutor _requestExecutor;                
+        private readonly IRequestExecutor _requestExecutor;
         public WeatherApiHostedService(IUnitOfWork unitOfWork, ICommandDispatcher commandDispatcher, IRequestExecutor requestExecutor)
         {
             _unitOfWork = unitOfWork;
             _commandDispatcher = commandDispatcher;
-            _requestExecutor = requestExecutor;            
+            _requestExecutor = requestExecutor;
         }
         public WeatherApiHostedService(IRequestExecutor requestExecutor)
         {
@@ -70,11 +69,11 @@ namespace WeatherAPI.HostedServices
         }
         public async void GetDataFromWeatherApi()
         {
-            try 
+            try
             {
                 var request = new GetByCityNameRequest("Florianópolis");
 
-                await _requestExecutor.ExecuteRequest<GetByCityNameRequest, CurrentLocalWeatherDto>(request).ContinueWith(response => 
+                await _requestExecutor.ExecuteRequest<GetByCityNameRequest, CurrentLocalWeatherDto>(request).ContinueWith(response =>
                 {
                     var command = new GetByCityNameCurrentWeatherCommand(response.Result.AsBusiness());
 
@@ -82,14 +81,14 @@ namespace WeatherAPI.HostedServices
 
                 }).ConfigureAwait(true);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
-        {            
+        {
             while (!cancellationToken.IsCancellationRequested)
             {
                 GetDataFromWeatherApi();

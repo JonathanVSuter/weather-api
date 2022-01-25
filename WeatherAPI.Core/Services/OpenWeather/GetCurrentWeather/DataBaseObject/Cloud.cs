@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.DataBaseObject
+﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.DataBaseObject
 {
     public class Cloud
     {

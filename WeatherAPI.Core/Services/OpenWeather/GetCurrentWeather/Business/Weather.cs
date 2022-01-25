@@ -12,7 +12,7 @@
             Main = main;
             Description = description;
             Icon = icon;
-        }        
+        }
     }
 
 

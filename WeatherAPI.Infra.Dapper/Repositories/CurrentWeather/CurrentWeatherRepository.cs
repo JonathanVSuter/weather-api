@@ -5,14 +5,13 @@ using System.Data.SqlClient;
 using WeatherAPI.Core.Configuration;
 using WeatherAPI.Core.Repositories;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 {
     public class CurrentWeatherRepository : ICurrentWeatherRepository
     {
         private readonly IOptions<ApiConfiguration> _options;
-        public CurrentWeatherRepository(IOptions<ApiConfiguration> options) 
+        public CurrentWeatherRepository(IOptions<ApiConfiguration> options)
         {
             _options = options;
         }
@@ -76,7 +75,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             };
         }
         public int SaveCurrentLocalWeather(int coordinateId, CurrentLocalWeather currentLocalWeather)
-        {            
+        {
             var sql = @"BEGIN
 	                        DECLARE @idLocal INT;	
 	                        SELECT @idLocal = l.Id FROM [Local] l WHERE l.Name = @name
@@ -105,10 +104,10 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 
             var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
             using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
-            {                
+            {
                 cmd.Parameters.AddWithValue("@name", currentLocalWeather.Name);
                 cmd.Parameters.AddWithValue("@timezone", currentLocalWeather.Timezone);
-                cmd.Parameters.AddWithValue("@coordinateId", coordinateId);               
+                cmd.Parameters.AddWithValue("@coordinateId", coordinateId);
                 cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
                 cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
 
@@ -263,6 +262,6 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 cmd.ExecuteScalar();
                 sqlConnection.Close();
             };
-        }        
+        }
     }
 }
