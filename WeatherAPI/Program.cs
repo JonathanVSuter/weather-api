@@ -51,7 +51,7 @@ namespace WeatherAPI
                     services.AddScoped<ICloudRepository, CloudRepository>();
                     services.AddScoped<IWeatherRepository, WeatherRepository>();
                     services.AddScoped<ICoordinateRepository, CoordinateRepository>();
-                    services.AddScoped<ICurrentLocalWeatherRepository, CurrentLocalWeatherRepository>();
+                    services.AddScoped<ICurrentWeatherRepository, CurrentWeatherRepository>();
                     services.AddScoped<IWeatherRelationshipsFinisherRepository, WeatherRelationshipsFinisherRepository>();
                     services.AddHostedService<WeatherApiHostedService>();                    
                 })
