@@ -14,6 +14,7 @@ using WeatherAPI.Core.Requests;
 using WeatherAPI.Core.Services.OpenWeather;
 using WeatherAPI.HostedServices;
 using WeatherAPI.Infra.Dapper.Repositories.CurrentWeather;
+using WeatherAPI.Infra.Dapper.TransactionManagement;
 using WeatherAPI.Infra.Http.OpenWeather;
 using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
 
@@ -45,6 +46,7 @@ namespace WeatherAPI
                     services.AddScoped<IRequestHandler<GetByCityNameRequest, CurrentLocalWeatherDto>, GetByCityNameRequestHandler>();
                     services.AddScoped<ICommandHandler<GetByCityNameCurrentWeatherCommand>, GetByCityNameCurrentWeatherCommandHandler>();
                     services.AddScoped<ICurrentWeatherRepository, CurrentWeatherRepository>();
+                    services.AddScoped<IDbSession,DbSession>();
                     services.AddHostedService<WeatherApiHostedService>();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>

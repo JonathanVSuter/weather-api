@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using WeatherAPI.Application.BaseOperations;
 using WeatherAPI.Core.Common.InfraOperations;
+using WeatherAPI.Infra.Dapper.TransactionManagement;
 
 namespace WeatherAPI.Modules
 {
