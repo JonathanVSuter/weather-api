@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using WeatherAPI.Core.Common.HostedServices;
+using Microsoft.Extensions.Hosting;
 using WeatherAPI.HostedServices;
 
 namespace WeatherAPI.Modules
@@ -9,7 +9,7 @@ namespace WeatherAPI.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<WeatherApiHostedService>().As<IWeatherApiHostedService>();
+            builder.RegisterType<WeatherApiHostedService>().As<IHostedService>().InstancePerDependency();
         }
     }
 }

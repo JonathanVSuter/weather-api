@@ -7,7 +7,6 @@ using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Configuration;
 using WeatherAPI.Core.Repositories;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
-using WeatherAPI.Infra.Dapper.Connections;
 
 namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 {
@@ -185,7 +184,108 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             };
         }
-        public void AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers) 
+        //public async Task<bool> AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers) 
+        //{
+        //    DateTime created = DateTime.Now;
+        //    try
+        //    {
+        //        _unitOfWork.BeginTransaction();
+
+        //        var sql = @"INSERT INTO [dbo].[Local_Cloud]
+        //                           ([fk_Local_Id]
+        //                           ,[fk_Cloud_Id]
+        //                           ,[CreatedAt]
+        //                           ,[LastUpdate])
+        //                     VALUES
+        //                           (@idLocal
+        //                           ,@idCloud
+        //                           ,@createdAt
+        //                           ,@lastUpdate)";                
+
+        //        using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
+        //        {
+        //            cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
+        //            cmd.Parameters.Add("@idCloud", System.Data.SqlDbType.Int);
+        //            cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
+        //            cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
+
+        //            cmd.Parameters["@idLocal"].Value = idLocal;
+        //            cmd.Parameters["@idCloud"].Value = idCloud;
+        //            cmd.Parameters["@createdAt"].Value = created;
+        //            cmd.Parameters["@lastUpdate"].Value = created;
+
+        //            await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
+
+        //        };
+
+        //        sql = @"INSERT INTO [dbo].[Local_Weather]
+        //                       ([fk_Local_Id]
+        //                       ,[fk_Weather_Id]
+        //                       ,[createdAt]
+        //                       ,[updatedAt])
+        //                 VALUES
+        //                       (@idLocal
+        //                       ,@idWeather
+        //                       ,@createdAt
+        //                       ,@lastUpdate)";
+
+        //        foreach (var idWeather in idWeathers)
+        //        {
+
+        //            using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
+        //            {
+        //                cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
+        //                cmd.Parameters.Add("@idWeather", System.Data.SqlDbType.Int);
+        //                cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
+        //                cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
+
+        //                cmd.Parameters["@idLocal"].Value = idLocal;
+        //                cmd.Parameters["@idWeather"].Value = idWeather;
+        //                cmd.Parameters["@createdAt"].Value = created;
+        //                cmd.Parameters["@lastUpdate"].Value = created;
+
+        //                await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
+        //            };
+        //        }
+
+        //        sql = @"INSERT INTO [dbo].[Local_Wind]
+        //                           ([fk_Local_Id]
+        //                           ,[fk_Wind_Id]
+        //                           ,[CreatedAt]
+        //                           ,[LastUpdate])
+        //                     VALUES
+        //                           (@idLocal
+        //                           ,@idWind
+        //                           ,@createdAt
+        //                           ,@lastUpdate)";
+
+        //        using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
+        //        {
+        //            cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
+        //            cmd.Parameters.Add("@idWind", System.Data.SqlDbType.Int);
+        //            cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
+        //            cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
+
+        //            cmd.Parameters["@idLocal"].Value = idLocal;
+        //            cmd.Parameters["@idWind"].Value = idWind;
+        //            cmd.Parameters["@createdAt"].Value = created;
+        //            cmd.Parameters["@lastUpdate"].Value = created;
+
+        //            await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
+        //        };
+
+        //        await _unitOfWork.CommitAsync().ConfigureAwait(true);
+
+        //        return true;
+        //    }
+        //    catch(SqlException ex) 
+        //    {
+        //        Debug.WriteLine($"Error: {ex.Message}");
+        //        _unitOfWork.Rollback();
+        //        return true;
+        //    }           
+        //}
+        public void AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers)
         {
             DateTime created = DateTime.Now;
             try
@@ -201,7 +301,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                                    (@idLocal
                                    ,@idCloud
                                    ,@createdAt
-                                   ,@lastUpdate)";                
+                                   ,@lastUpdate)";
 
                 using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
                 {
@@ -214,9 +314,9 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                     cmd.Parameters["@idCloud"].Value = idCloud;
                     cmd.Parameters["@createdAt"].Value = created;
                     cmd.Parameters["@lastUpdate"].Value = created;
-                    
+
                     cmd.ExecuteNonQuery();
-                    
+
                 };
 
                 sql = @"INSERT INTO [dbo].[Local_Weather]
@@ -277,11 +377,11 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 
                 _unitOfWork.Commit();
             }
-            catch(SqlException ex) 
+            catch (SqlException ex)
             {
                 Debug.WriteLine($"Error: {ex.Message}");
-                _unitOfWork.Rollback();                
-            }           
+                _unitOfWork.Rollback();
+            }
         }
         //private void AttachLocalToCloud(int idLocal, int idCloud)
         //{

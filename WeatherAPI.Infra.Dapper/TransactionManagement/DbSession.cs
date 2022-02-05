@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
-using System.Data;
 using System.Data.SqlClient;
 using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Configuration;
@@ -12,7 +11,7 @@ namespace WeatherAPI.Infra.Dapper.TransactionManagement
         public SqlConnection Connection { get; }
         public SqlTransaction Transaction { get; set; }
 
-        public Guid Id {get;}
+        public Guid Id { get; }
 
         public DbSession(IOptions<ApiConfiguration> options)
         {

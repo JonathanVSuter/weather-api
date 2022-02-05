@@ -10,7 +10,7 @@ namespace WeatherAPI.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<OpenWeatherApiServiceGetCurrent>().As<IOpenWeatherApiServiceGetCurrent>();
+            builder.RegisterType<OpenWeatherApiServiceGetCurrent>().As<IOpenWeatherApiServiceGetCurrent>().InstancePerLifetimeScope();
         }
     }
 }
