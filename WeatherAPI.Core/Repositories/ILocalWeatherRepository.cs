@@ -11,6 +11,7 @@ namespace WeatherAPI.Core.Repositories
         public int SaveWind(Wind wind);
         public int SaveCoordinate(Coordinate coordinate);
         void AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers);
+        //Task<bool> AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers);
         //void AttachLocalToWeather(int idLocal, IList<int> idWeathers);
         //void AttachLocalToWind(int idLocal, int idWind);
         //void AttachLocalToCloud(int idLocal, int idCloud);

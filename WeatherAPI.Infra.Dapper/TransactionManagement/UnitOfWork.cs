@@ -1,4 +1,5 @@
-﻿using WeatherAPI.Core.Common.InfraOperations;
+﻿using System.Threading.Tasks;
+using WeatherAPI.Core.Common.InfraOperations;
 
 namespace WeatherAPI.Infra.Dapper.TransactionManagement
 {
@@ -19,6 +20,10 @@ namespace WeatherAPI.Infra.Dapper.TransactionManagement
             _session.Transaction.Commit();
             Dispose();
         }
+        public async Task CommitAsync()
+        {
+            await _session.Transaction.CommitAsync().ConfigureAwait(true);
+        }
         public IDbSession DbSession()
         {
             return _session;
@@ -30,6 +35,11 @@ namespace WeatherAPI.Infra.Dapper.TransactionManagement
         public void Rollback()
         {
             _session.Transaction.Rollback();
+            Dispose();
+        }
+        public async Task RollbackAsync()
+        {
+            await _session.Transaction.RollbackAsync().ConfigureAwait(true);
             Dispose();
         }
     }

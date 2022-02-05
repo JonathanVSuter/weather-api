@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using WeatherAPI.Core.Commands.OpenWeatherApiCommands;
 using WeatherAPI.Core.Common.CommandHandler;
-using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Repositories;
 
 namespace WeatherAPI.Application.CommandHandlers.OpenWeatherApiHandlers
 {
     public class GetByCityNameCurrentWeatherCommandHandler : ICommandHandler<GetByCityNameCurrentWeatherCommand>
     {
-        private readonly ICurrentWeatherRepository _currentLocalWeatherRepository;        
+        private readonly ICurrentWeatherRepository _currentLocalWeatherRepository;
         public GetByCityNameCurrentWeatherCommandHandler(ICurrentWeatherRepository currentLocalWeatherRepository)
         {
-            _currentLocalWeatherRepository = currentLocalWeatherRepository;            
+            _currentLocalWeatherRepository = currentLocalWeatherRepository;
         }
 
         public void Handle(GetByCityNameCurrentWeatherCommand command)
@@ -29,7 +28,7 @@ namespace WeatherAPI.Application.CommandHandlers.OpenWeatherApiHandlers
             //add unitOfWork state
 
             _currentLocalWeatherRepository.AttachLocalToOthers(localId, cloudId, windId, weatherIds);
-            
+
             //_currentLocalWeatherRepository.AttachLocalToCloud(localId, cloudId);
 
             //_currentLocalWeatherRepository.AttachLocalToWeather(localId, weatherIds);
