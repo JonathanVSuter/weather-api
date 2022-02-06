@@ -8,7 +8,6 @@
     <Folder Include="Helpers\" />
     <Folder Include="Extensions\" />
     <Folder Include="Enumerators\" />
-    <Folder Include="Queries\OpenWeatherApi\" />
   </ItemGroup>
 
   <ItemGroup>

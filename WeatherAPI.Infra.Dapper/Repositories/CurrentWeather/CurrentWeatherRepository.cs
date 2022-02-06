@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Dapper;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Configuration;
+using WeatherAPI.Core.Queries.OpenWeatherApi;
 using WeatherAPI.Core.Repositories;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
 
@@ -382,6 +384,32 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 Debug.WriteLine($"Error: {ex.Message}");
                 _unitOfWork.Rollback();
             }
+        }
+
+        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, DateTime startDate, DateTime finalDate)
+        {
+            var sql = @"SELECT l.Name as CityName,
+                        lw.createdAt as CreatedDate,
+                        w.Main as WeatherDescription,
+                        w.Description SubDescription
+                        FROM Local l 
+                        LEFT JOIN Local_Weather lw ON l.Id = lw.fk_Local_Id
+                        LEFT JOIN Weather w ON lw.fk_Weather_Id = w.Id
+                        WHERE l.Name = @cityName 
+                        AND (lw.createdAt >= @startDate AND lw.createdAt <= @finalDate)";
+
+            var parameters = new
+            {
+                cityName,
+                startDate,
+                finalDate
+            };
+
+            using (var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection)) 
+            {
+                var result = sqlConnection.Query<WeatherFromCityByDateDto>(sql, parameters);
+                return result;
+            } 
         }
         //private void AttachLocalToCloud(int idLocal, int idCloud)
         //{

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using WeatherAPI.Core.Queries.OpenWeatherApi;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
 
 namespace WeatherAPI.Core.Repositories
@@ -15,5 +17,6 @@ namespace WeatherAPI.Core.Repositories
         //void AttachLocalToWeather(int idLocal, IList<int> idWeathers);
         //void AttachLocalToWind(int idLocal, int idWind);
         //void AttachLocalToCloud(int idLocal, int idCloud);
+        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, DateTime startDate, DateTime finalDate);
     }
 }

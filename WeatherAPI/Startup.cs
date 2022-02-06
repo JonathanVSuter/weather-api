@@ -15,8 +15,8 @@ namespace WeatherAPI
         how to get data from appsettings
         https://stackoverflow.com/questions/31453495/how-to-read-appsettings-values-from-a-json-file-in-asp-net-core  
     
-        configure autofac:
-        https://stackoverflow.com/a/58133589/14612972
+        configure autofac on .net core 3.1:
+        https://docs.autofac.org/en/latest/integration/aspnetcore.html#asp-net-core-3-0-and-generic-hosting
      ***************************************************************************************************************/
 
     public class Startup
