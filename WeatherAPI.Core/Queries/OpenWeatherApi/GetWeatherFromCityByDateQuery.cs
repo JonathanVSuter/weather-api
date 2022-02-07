@@ -9,10 +9,10 @@ namespace WeatherAPI.Core.Queries.OpenWeatherApi
     public class GetWeatherFromCityByDateQuery :IQuery<IEnumerable<WeatherFromCityByDateDto>>
     {
         public string CityName { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime FinalDate { get; set; }
+        public string StartDate { get; set; }
+        public string FinalDate { get; set; }
 
-        public GetWeatherFromCityByDateQuery(string cityName, DateTime startDate, DateTime finalDate) 
+        public GetWeatherFromCityByDateQuery(string cityName, string startDate, string finalDate) 
         {
             if (string.IsNullOrEmpty(cityName)) throw new BusinessException("City name should be informed.");            
 

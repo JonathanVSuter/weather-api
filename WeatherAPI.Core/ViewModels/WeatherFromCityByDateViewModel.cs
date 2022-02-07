@@ -7,7 +7,7 @@ namespace WeatherAPI.Core.ViewModels
     public class WeatherFromCityByDateViewModel
     {
         public string City { get; set; }
-        public DateTime InitialDate { get; set; }
-        public DateTime FinalDate { get; set; }
+        public string InitialDate { get; set; }
+        public string FinalDate { get; set; }
     }
 }

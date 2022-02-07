@@ -386,7 +386,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             }
         }
 
-        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, DateTime startDate, DateTime finalDate)
+        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate)
         {
             var sql = @"SELECT l.Name as CityName,
                         lw.createdAt as CreatedDate,
