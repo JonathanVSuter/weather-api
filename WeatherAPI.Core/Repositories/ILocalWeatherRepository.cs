@@ -17,6 +17,6 @@ namespace WeatherAPI.Core.Repositories
         //void AttachLocalToWeather(int idLocal, IList<int> idWeathers);
         //void AttachLocalToWind(int idLocal, int idWind);
         //void AttachLocalToCloud(int idLocal, int idCloud);
-        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, DateTime startDate, DateTime finalDate);
+        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate);
     }
 }
