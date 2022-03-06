@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Core.Services.OpenWeather
 {

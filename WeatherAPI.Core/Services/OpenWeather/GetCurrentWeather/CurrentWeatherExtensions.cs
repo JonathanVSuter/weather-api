@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WeatherAPI.Core.Exceptions.Arguments;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 {
@@ -18,8 +18,14 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 
             return new CurrentLocalWeather(CoordToBusiness(getCurrentWeatherObject.Coord), WeatherToBusiness(getCurrentWeatherObject.Weather), MainToBusiness(getCurrentWeatherObject.Main),
                                                       getCurrentWeatherObject.Visibility, WindToBusiness(getCurrentWeatherObject.Wind), CloudsToBusiness(getCurrentWeatherObject.Clouds),
-                                                      getCurrentWeatherObject.Dt, SysToBusiness(getCurrentWeatherObject.Sys), getCurrentWeatherObject.Timezone,
-                                                      getCurrentWeatherObject.Id, getCurrentWeatherObject.Name, getCurrentWeatherObject.Cod);
+                                                      getCurrentWeatherObject.Dt, SysToBusiness(getCurrentWeatherObject.Sys),
+                                                      getCurrentWeatherObject.Id, LocalToBusiness(getCurrentWeatherObject.Local));
+        }
+        public static Local LocalToBusiness(LocalDto local) 
+        {
+            if (local is null) throw new ArgumentNullException(nameof(local));
+
+            return new Local(local.Name, local.Timezone);
         }
         public static Sys SysToBusiness(SysDto sys)
         {
@@ -27,12 +33,12 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
 
             return new Sys(sys.Type, sys.Id, sys.Country, sys.Sunrise, sys.Sunset);
         }
-        public static Main MainToBusiness(MainDto main)
+        public static AtmosphereConditions MainToBusiness(MainDto main)
         {
             if (main is null)
                 throw new ArgumentNullException(nameof(main));
 
-            return new Main(main.Temp, main.FeelsLike, main.TempMin, main.TempMax, main.Pressure, main.Humidity);
+            return new AtmosphereConditions(main.Temp, main.FeelsLike, main.TempMin, main.TempMax, main.Pressure, main.Humidity);
         }
         public static Coordinate CoordToBusiness(CoordinateDto coord)
         {

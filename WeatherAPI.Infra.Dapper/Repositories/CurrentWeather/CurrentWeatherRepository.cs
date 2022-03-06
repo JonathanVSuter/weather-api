@@ -21,15 +21,16 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             _options = options;
             _unitOfWork = unitOfWork;
         }
-        public int SaveCloud(Cloud clouds)
+        public int SaveCloud(Cloud clouds, DateTime createdDate)
         {
+            //Change the name of column 'All' to other name
             var sql = @"BEGIN	
 	                        DECLARE @idCloud INT;	
-	                        SELECT @idCloud = c.Id from Cloud c where c.Cloudiness = @cloudiness
+	                        SELECT @idCloud = c.Id from Cloud c where c.AllClouds = @allClouds
 	                        
                             IF LEN(ISNULL(CAST(@idCloud AS varchar(50)),'')) = 0
 	                        BEGIN		                        
-		                        INSERT INTO Cloud (Cloudiness, CreatedAt, LastUpdate) OUTPUT Inserted.ID values (@cloudiness, GETDATE(), GETDATE())
+		                        INSERT INTO Cloud (AllClouds, CreatedDate, UpdatedDate) OUTPUT Inserted.Id values (@allClouds, @createdDate, @updatedDate)
 	                        END
 	                        ELSE
 	                        BEGIN
@@ -40,14 +41,16 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
             using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
             {
-                cmd.Parameters.AddWithValue("@cloudiness", clouds.All);
+                cmd.Parameters.AddWithValue("@allClouds", clouds.All);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
                 sqlConnection.Open();
                 var result = (int)cmd.ExecuteScalar();
                 sqlConnection.Close();
                 return result;
             }
         }
-        public int SaveWeather(Weather weather)
+        public int SaveWeather(Weather weather, DateTime createdDate)
         {
             var sql = @"BEGIN	
 	                        DECLARE @idWeather INT;	
@@ -55,11 +58,11 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 	                        
                             IF LEN(ISNULL(CAST(@idWeather AS varchar(50)),'')) = 0
 	                        BEGIN		                        
-		                        INSERT INTO [dbo].[Weather]([Id],[Main],[Description],[Icon],[CreatedAt],[LastUpdate]) OUTPUT Inserted.ID VALUES (@id,@main,@description,@icon,@createdAt,@lastUpdate)
+		                        INSERT INTO Weather(Id,Main,Description,Icon,CreatedDate,UpdatedDate) OUTPUT Inserted.ID VALUES (@id,@main,@description,@icon,@createdDate,@updatedDate)
 	                        END
 	                        ELSE
 	                        BEGIN
-		                        select @idWeather
+		                        SELECT @idWeather
 	                        END	
                         END";
 
@@ -70,8 +73,8 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 cmd.Parameters.AddWithValue("@main", weather.Main);
                 cmd.Parameters.AddWithValue("@description", weather.Description);
                 cmd.Parameters.AddWithValue("@icon", weather.Icon);
-                cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
 
                 sqlConnection.Open();
                 var result = (int)cmd.ExecuteScalar();
@@ -80,42 +83,39 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             };
         }
-        public int SaveCurrentLocalWeather(int coordinateId, CurrentLocalWeather currentLocalWeather)
+        public int SaveCurrentLocalWeather(int idLocal, int idCloud, int idWind, int idCoordinate, int idSysAttributes, int idAtmosphereConditions, DateTime createdDate)
         {
-            var sql = @"BEGIN
-	                        DECLARE @idLocal INT;	
-	                        SELECT @idLocal = l.Id FROM [Local] l WHERE l.Name = @name
-	                        
-                            IF LEN(ISNULL(CAST(@idLocal AS varchar(50)),'')) = 0
-								BEGIN		                        
-									INSERT INTO [dbo].[Local]
-									([Name]
-									,[Timezone]
-									,[CoordinateId]
-									,[CreatedAt]
-									,[LastUpdate])
-									OUTPUT Inserted.Id
-								VALUES
-									(@name
-									,@timezone
-									,@coordinateId
-									,@createdAt
-									,@lastUpdate)
-								END
-	                        ELSE
-								BEGIN
-									select @idLocal
-								END	
-                        END";
+            var sql = @"INSERT INTO Current_Local_Weather
+                               (Wind_Id
+                               ,Local_Id
+                               ,Coordinate_Id
+                               ,Atmosphere_conditions_Id
+                               ,Clouds_Id
+                               ,SysAttributes_Id
+                               ,CreatedDate
+                               ,UpdateDate)
+                               OUTPUT Inserted.Id
+                         VALUES
+                               (@windId
+                               ,@localId
+                               ,@coordinateId
+                               ,@atmosphereConditionsId
+                               ,@cloudId
+                               ,@sysattributesId
+                               ,@createdDate
+                               ,@updatedDate)";
 
             var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
             using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
             {
-                cmd.Parameters.AddWithValue("@name", currentLocalWeather.Name);
-                cmd.Parameters.AddWithValue("@timezone", currentLocalWeather.Timezone);
-                cmd.Parameters.AddWithValue("@coordinateId", coordinateId);
-                cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@windId", idWind);
+                cmd.Parameters.AddWithValue("@localId", idLocal);
+                cmd.Parameters.AddWithValue("@coordinateId", idCoordinate);
+                cmd.Parameters.AddWithValue("@atmosphereConditionsId", idAtmosphereConditions);
+                cmd.Parameters.AddWithValue("@cloudId", idCloud);
+                cmd.Parameters.AddWithValue("@sysattributesId", idSysAttributes);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
 
                 sqlConnection.Open();
                 var result = (int)cmd.ExecuteScalar();
@@ -124,7 +124,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             };
         }
-        public int SaveCoordinate(Coordinate coordinate)
+        public int SaveCoordinate(Coordinate coordinate, DateTime createdDate)
         {
             var sql = @"BEGIN	
 	                        DECLARE @idCoordinate INT;	
@@ -132,7 +132,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 	                        
                             IF LEN(ISNULL(CAST(@idCoordinate AS varchar(50)),'')) = 0
 	                        BEGIN		                        
-		                        INSERT INTO [dbo].[Coordinate] ([Longitude],[Latitude],[CreatedAt],[LastUpdate]) OUTPUT Inserted.ID VALUES (@longitude, @latitude, @createdAt,@lastUpdate)
+		                        INSERT INTO Coordinate (Longitude,Latitude,CreatedDate,UpdatedDate) OUTPUT Inserted.ID VALUES (@longitude, @latitude, @createdDate,@updateDate)
 	                        END
 	                        ELSE
 	                        BEGIN
@@ -145,8 +145,8 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
             {
                 cmd.Parameters.AddWithValue("@longitude", coordinate.Lon);
                 cmd.Parameters.AddWithValue("@latitude", coordinate.Lat);
-                cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updateDate", createdDate);
                 sqlConnection.Open();
                 var result = (int)cmd.ExecuteScalar();
                 sqlConnection.Close();
@@ -154,15 +154,15 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             };
         }
-        public int SaveWind(Wind wind)
+        public int SaveWind(Wind wind, DateTime createdDate)
         {
             var sql = @"BEGIN	
 	                        DECLARE @idWind INT;	
-	                        select @idWind = w.Id from Wind w where w.Speed = @speed and w.Degree = @degree and w.Gust = @gust
+	                        select @idWind = w.Id from Wind w where w.Speed = @speed and w.Deg = @degree and w.Gust = @gust
 	                        
                             IF LEN(ISNULL(CAST(@idWind AS varchar(50)),'')) = 0
 	                        BEGIN		                        
-		                        INSERT INTO [dbo].[Wind]([Speed],[Degree],[Gust],[CreatedAt],[LastUpdate]) OUTPUT Inserted.ID VALUES (@speed, @degree, @gust, @createdAt, @lastUpdate)
+		                        INSERT INTO Wind(Speed,Deg,Gust,CreatedDate,UpdatedDate) OUTPUT Inserted.ID VALUES (@speed, @degree, @gust, @createdDate, @updatedDate)
 	                        END
 	                        ELSE
 	                        BEGIN
@@ -176,8 +176,8 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 cmd.Parameters.AddWithValue("@speed", wind.Speed);
                 cmd.Parameters.AddWithValue("@degree", wind.Deg);
                 cmd.Parameters.AddWithValue("@gust", wind.Gust);
-                cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
 
                 sqlConnection.Open();
                 var result = (int)cmd.ExecuteScalar();
@@ -186,206 +186,197 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             };
         }
-        //public async Task<bool> AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers) 
-        //{
-        //    DateTime created = DateTime.Now;
-        //    try
-        //    {
-        //        _unitOfWork.BeginTransaction();
-
-        //        var sql = @"INSERT INTO [dbo].[Local_Cloud]
-        //                           ([fk_Local_Id]
-        //                           ,[fk_Cloud_Id]
-        //                           ,[CreatedAt]
-        //                           ,[LastUpdate])
-        //                     VALUES
-        //                           (@idLocal
-        //                           ,@idCloud
-        //                           ,@createdAt
-        //                           ,@lastUpdate)";                
-
-        //        using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
-        //        {
-        //            cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-        //            cmd.Parameters.Add("@idCloud", System.Data.SqlDbType.Int);
-        //            cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-        //            cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
-
-        //            cmd.Parameters["@idLocal"].Value = idLocal;
-        //            cmd.Parameters["@idCloud"].Value = idCloud;
-        //            cmd.Parameters["@createdAt"].Value = created;
-        //            cmd.Parameters["@lastUpdate"].Value = created;
-
-        //            await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
-
-        //        };
-
-        //        sql = @"INSERT INTO [dbo].[Local_Weather]
-        //                       ([fk_Local_Id]
-        //                       ,[fk_Weather_Id]
-        //                       ,[createdAt]
-        //                       ,[updatedAt])
-        //                 VALUES
-        //                       (@idLocal
-        //                       ,@idWeather
-        //                       ,@createdAt
-        //                       ,@lastUpdate)";
-
-        //        foreach (var idWeather in idWeathers)
-        //        {
-
-        //            using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
-        //            {
-        //                cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-        //                cmd.Parameters.Add("@idWeather", System.Data.SqlDbType.Int);
-        //                cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-        //                cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
-
-        //                cmd.Parameters["@idLocal"].Value = idLocal;
-        //                cmd.Parameters["@idWeather"].Value = idWeather;
-        //                cmd.Parameters["@createdAt"].Value = created;
-        //                cmd.Parameters["@lastUpdate"].Value = created;
-
-        //                await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
-        //            };
-        //        }
-
-        //        sql = @"INSERT INTO [dbo].[Local_Wind]
-        //                           ([fk_Local_Id]
-        //                           ,[fk_Wind_Id]
-        //                           ,[CreatedAt]
-        //                           ,[LastUpdate])
-        //                     VALUES
-        //                           (@idLocal
-        //                           ,@idWind
-        //                           ,@createdAt
-        //                           ,@lastUpdate)";
-
-        //        using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
-        //        {
-        //            cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-        //            cmd.Parameters.Add("@idWind", System.Data.SqlDbType.Int);
-        //            cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-        //            cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
-
-        //            cmd.Parameters["@idLocal"].Value = idLocal;
-        //            cmd.Parameters["@idWind"].Value = idWind;
-        //            cmd.Parameters["@createdAt"].Value = created;
-        //            cmd.Parameters["@lastUpdate"].Value = created;
-
-        //            await cmd.ExecuteNonQueryAsync().ConfigureAwait(true);
-        //        };
-
-        //        await _unitOfWork.CommitAsync().ConfigureAwait(true);
-
-        //        return true;
-        //    }
-        //    catch(SqlException ex) 
-        //    {
-        //        Debug.WriteLine($"Error: {ex.Message}");
-        //        _unitOfWork.Rollback();
-        //        return true;
-        //    }           
-        //}
-        public void AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers)
+        public int SaveLocal(Local local, DateTime createdDate)
         {
-            DateTime created = DateTime.Now;
+            var sql = @"BEGIN
+	                        DECLARE @idLocal INT;	
+	                        SELECT @idLocal = l.Id FROM Local l WHERE l.Name = @name
+	                        
+                            IF LEN(ISNULL(CAST(@idLocal AS varchar(50)),'')) = 0
+								BEGIN		                        
+									INSERT INTO Local
+									(Name
+									,Timezone
+									,CreatedDate
+									,UpdatedDate)
+									OUTPUT Inserted.Id
+								VALUES
+									(@name
+									,@timezone									
+									,@createdDate
+									,@updatedDate)                                
+								END
+	                        ELSE
+								BEGIN
+									select @idLocal
+								END	
+                        END";
+
+            var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
+            using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
+            {
+                cmd.Parameters.AddWithValue("@name", local.Name);
+                cmd.Parameters.AddWithValue("@timezone", local.Timezone);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
+
+                sqlConnection.Open();
+                var result = (int)cmd.ExecuteScalar();
+                sqlConnection.Close();
+
+                return result;
+            };
+        }
+        public int SaveAtmosphereConditions(AtmosphereConditions main, DateTime createdDate)
+        {
+            var sql = @"BEGIN
+	                        DECLARE @idAtmospherCondition INT;
+
+                            SELECT @idAtmospherCondition =Id 
+                            FROM Atmosphere_condition a
+                            WHERE a.FeelsLike = @feelsLike 
+                              and a.Humidity = @humidity
+                              and a.Pressure = @pressure
+                              and a.Temp = @temp
+                              and a.TempMin = @tempMin
+                              and a.TempMax = @tempMax
+	                        
+                            IF LEN(ISNULL(CAST(@idAtmospherCondition AS varchar(50)),'')) = 0
+								BEGIN		                        
+									INSERT INTO Atmosphere_condition
+                                           (Temp
+                                           ,FeelsLike
+                                           ,TempMin
+                                           ,TempMax
+                                           ,Pressure
+                                           ,Humidity
+                                           ,CreatedDate
+                                           ,UpdatedDate)
+                                          OUTPUT Inserted.Id	
+                                     VALUES
+                                           (@temp
+                                           ,@feelsLike
+                                           ,@tempMin
+                                           ,@tempMax
+                                           ,@pressure
+                                           ,@humidity
+                                           ,@createdDate
+                                           ,@updatedDate)
+								END
+	                        ELSE
+								BEGIN
+									select @idAtmospherCondition
+								END	
+                        END";
+
+            var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
+            using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
+            {
+                cmd.Parameters.AddWithValue("@temp", main.Temp);
+                cmd.Parameters.AddWithValue("@feelsLike", main.FeelsLike);
+                cmd.Parameters.AddWithValue("@tempMin", main.TempMin);
+                cmd.Parameters.AddWithValue("@tempMax", main.TempMax);
+                cmd.Parameters.AddWithValue("@pressure", main.Pressure);
+                cmd.Parameters.AddWithValue("@humidity", main.Humidity);
+                cmd.Parameters.AddWithValue("@createdDate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@updatedDate", DateTime.Now);
+
+                sqlConnection.Open();
+                var result = (int)cmd.ExecuteScalar();
+                sqlConnection.Close();
+
+                return result;
+            };
+        }
+        public int SaveSysAttributes(Sys sys, DateTime createdDate)
+        {
+            var sql = @"BEGIN
+	                        DECLARE @idSys INT;
+
+	                        SELECT @idSys = Id
+                              FROM SysAttribute a
+                              WHERE a.Sunrise = @sunrise
+                              AND a.Sunset = @sunset
+	                        
+                            IF LEN(ISNULL(CAST(@idSys AS varchar(50)),'')) = 0
+								BEGIN		                        
+									INSERT INTO dbo.SysAttribute
+                                           (Sunrise
+                                           ,Sunset
+                                           ,Country
+                                           ,Type
+                                           ,CreatedDate
+                                           ,UpdateDate)
+                                           OUTPUT Inserted.Id	
+                                     VALUES                                            
+                                           (@sunrise
+                                           ,@sunset
+                                           ,@country
+                                           ,@type
+                                           ,@createdDate
+                                           ,@updatedDate)
+								END
+	                        ELSE
+								BEGIN
+									SELECT @idSys
+								END	
+                        END";
+
+            var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
+            using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
+            {
+                cmd.Parameters.AddWithValue("@sunrise", sys.Sunrise);
+                cmd.Parameters.AddWithValue("@sunset", sys.Sunset);
+                cmd.Parameters.AddWithValue("@country", sys.Country);
+                cmd.Parameters.AddWithValue("@type", sys.Type);
+                cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                cmd.Parameters.AddWithValue("@updatedDate", createdDate);
+
+                sqlConnection.Open();
+                var result = (int)cmd.ExecuteScalar();
+                sqlConnection.Close();
+
+                return result;
+            };
+        }
+        public bool AttachCurrentLocalWeatherToWeather(int idCurrentLocalWeather, IList<int> idWeathers, DateTime createdDate)
+        {
             try
             {
-                _unitOfWork.BeginTransaction();
-
-                var sql = @"INSERT INTO [dbo].[Local_Cloud]
-                                   ([fk_Local_Id]
-                                   ,[fk_Cloud_Id]
-                                   ,[CreatedAt]
-                                   ,[LastUpdate])
-                             VALUES
-                                   (@idLocal
-                                   ,@idCloud
-                                   ,@createdAt
-                                   ,@lastUpdate)";
-
-                using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
+                foreach (var item in idWeathers)
                 {
-                    cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-                    cmd.Parameters.Add("@idCloud", System.Data.SqlDbType.Int);
-                    cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-                    cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
+                    var sql = @"INSERT INTO Current_Local_Weather_Weather
+                                   (Weather_Id
+                                   ,Current_Local_Weather_Weather_Id
+                                   ,CreatedDate
+                                   ,UpdateDate)
+                            VALUES
+                                   (@weatherId
+                                   ,@currentLocalWeatherId
+                                   ,@createdDate
+                                   ,@updatedDate)";
 
-                    cmd.Parameters["@idLocal"].Value = idLocal;
-                    cmd.Parameters["@idCloud"].Value = idCloud;
-                    cmd.Parameters["@createdAt"].Value = created;
-                    cmd.Parameters["@lastUpdate"].Value = created;
-
-                    cmd.ExecuteNonQuery();
-
-                };
-
-                sql = @"INSERT INTO [dbo].[Local_Weather]
-                               ([fk_Local_Id]
-                               ,[fk_Weather_Id]
-                               ,[createdAt]
-                               ,[updatedAt])
-                         VALUES
-                               (@idLocal
-                               ,@idWeather
-                               ,@createdAt
-                               ,@lastUpdate)";
-
-                foreach (var idWeather in idWeathers)
-                {
-
-                    using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
+                    var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
+                    using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
                     {
-                        cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-                        cmd.Parameters.Add("@idWeather", System.Data.SqlDbType.Int);
-                        cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-                        cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
+                        cmd.Parameters.AddWithValue("@currentLocalWeatherId", idCurrentLocalWeather);
+                        cmd.Parameters.AddWithValue("@weatherId", item);
+                        cmd.Parameters.AddWithValue("@createdDate", createdDate);
+                        cmd.Parameters.AddWithValue("@updatedDate", createdDate);
 
-                        cmd.Parameters["@idLocal"].Value = idLocal;
-                        cmd.Parameters["@idWeather"].Value = idWeather;
-                        cmd.Parameters["@createdAt"].Value = created;
-                        cmd.Parameters["@lastUpdate"].Value = created;
-
+                        sqlConnection.Open();
                         cmd.ExecuteNonQuery();
+                        sqlConnection.Close();
                     };
                 }
-
-                sql = @"INSERT INTO [dbo].[Local_Wind]
-                                   ([fk_Local_Id]
-                                   ,[fk_Wind_Id]
-                                   ,[CreatedAt]
-                                   ,[LastUpdate])
-                             VALUES
-                                   (@idLocal
-                                   ,@idWind
-                                   ,@createdAt
-                                   ,@lastUpdate)";
-
-                using (SqlCommand cmd = new SqlCommand(sql, _unitOfWork._session.Connection, _unitOfWork._session.Transaction))
-                {
-                    cmd.Parameters.Add("@idLocal", System.Data.SqlDbType.Int);
-                    cmd.Parameters.Add("@idWind", System.Data.SqlDbType.Int);
-                    cmd.Parameters.Add("@createdAt", System.Data.SqlDbType.DateTime);
-                    cmd.Parameters.Add("@lastUpdate", System.Data.SqlDbType.DateTime);
-
-                    cmd.Parameters["@idLocal"].Value = idLocal;
-                    cmd.Parameters["@idWind"].Value = idWind;
-                    cmd.Parameters["@createdAt"].Value = created;
-                    cmd.Parameters["@lastUpdate"].Value = created;
-
-                    cmd.ExecuteNonQuery();
-                };
-
-                _unitOfWork.Commit();
+                return true;
             }
-            catch (SqlException ex)
+            catch(Exception ex)
             {
-                Debug.WriteLine($"Error: {ex.Message}");
-                _unitOfWork.Rollback();
+                Debug.WriteLine("Erro: " + ex.Message);
+                return false;
             }
-        }
-
+        }        
         public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate)
         {
             var sql = @"SELECT l.Name as CityName,
@@ -411,88 +402,5 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             } 
         }
-        //private void AttachLocalToCloud(int idLocal, int idCloud)
-        //{
-        //    var sql = @"INSERT INTO [dbo].[Local_Cloud]
-        //                           ([fk_Local_Id]
-        //                           ,[fk_Cloud_Id]
-        //                           ,[CreatedAt]
-        //                           ,[LastUpdate])
-        //                     VALUES
-        //                           (@idLocal
-        //                           ,@idCloud
-        //                           ,@createdAt
-        //                           ,@lastUpdate)";
-
-        //    var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
-        //    using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
-        //    {
-        //        cmd.Parameters.AddWithValue("@idLocal", idLocal);
-        //        cmd.Parameters.AddWithValue("@idCloud", idCloud);
-        //        cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-        //        cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
-
-        //        sqlConnection.Open();
-        //        cmd.ExecuteScalar();
-        //        sqlConnection.Close();
-        //    };
-        //}
-        //private void AttachLocalToWeather(int idLocal, IList<int> idWeathers)
-        //{
-        //    var sql = @"INSERT INTO [dbo].[Local_Weather]
-        //                       ([fk_Local_Id]
-        //                       ,[fk_Weather_Id]
-        //                       ,[createdAt]
-        //                       ,[updatedAt])
-        //                 VALUES
-        //                       (@idLocal
-        //                       ,@idWeather
-        //                       ,@createdAt
-        //                       ,@lastUpdate)";
-
-        //    var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
-
-        //    foreach (var idWeather in idWeathers)
-        //    {
-
-        //        using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
-        //        {
-        //            cmd.Parameters.AddWithValue("@idLocal", idLocal);
-        //            cmd.Parameters.AddWithValue("@idWeather", idWeather);
-        //            cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-        //            cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
-
-        //            sqlConnection.Open();
-        //            cmd.ExecuteScalar();
-        //            sqlConnection.Close();
-        //        };
-        //    }
-        //}
-        //private void AttachLocalToWind(int idLocal, int idWind)
-        //{
-        //    var sql = @"INSERT INTO [dbo].[Local_Wind]
-        //                           ([fk_Local_Id]
-        //                           ,[fk_Wind_Id]
-        //                           ,[CreatedAt]
-        //                           ,[LastUpdate])
-        //                     VALUES
-        //                           (@idLocal
-        //                           ,@idWind
-        //                           ,@createdAt
-        //                           ,@lastUpdate)";
-
-        //    var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection);
-        //    using (SqlCommand cmd = new SqlCommand(sql, sqlConnection))
-        //    {
-        //        cmd.Parameters.AddWithValue("@idLocal", idLocal);
-        //        cmd.Parameters.AddWithValue("@idWind", idWind);
-        //        cmd.Parameters.AddWithValue("@createdAt", DateTime.Now);
-        //        cmd.Parameters.AddWithValue("@lastUpdate", DateTime.Now);
-
-        //        sqlConnection.Open();
-        //        cmd.ExecuteScalar();
-        //        sqlConnection.Close();
-        //    };
-        //}
     }
 }

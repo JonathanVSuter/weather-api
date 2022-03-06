@@ -2,7 +2,7 @@
 using WeatherAPI.Core.Common.RequestHandler;
 using WeatherAPI.Core.Requests;
 using WeatherAPI.Core.Services.OpenWeather;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Application.RequestHandlers.OpenWeatherApiHandlers.GetByCityRequestHandler
 {

@@ -1,4 +1,4 @@
-﻿namespace WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos
+﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos
 {
     public class WindDto
     {

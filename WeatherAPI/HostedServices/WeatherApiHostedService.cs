@@ -7,7 +7,7 @@ using WeatherAPI.Core.Common.HostedServices;
 using WeatherAPI.Core.Common.InfraOperations;
 using WeatherAPI.Core.Requests;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.HostedServices
 {
@@ -355,7 +355,6 @@ namespace WeatherAPI.HostedServices
         {
             try
             {
-
                 var requestList = new List<Task<CurrentLocalWeatherDto>>();
 
                 foreach (var item in _citiesToSearch)
@@ -372,7 +371,6 @@ namespace WeatherAPI.HostedServices
 
                     _commandDispatcher.Dispatch(command);
                 }
-
             }
             catch (Exception ex)
             {

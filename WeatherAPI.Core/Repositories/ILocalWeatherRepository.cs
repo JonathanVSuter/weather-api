@@ -7,16 +7,15 @@ namespace WeatherAPI.Core.Repositories
 {
     public interface ICurrentWeatherRepository
     {
-        public int SaveCurrentLocalWeather(int coordinateId, CurrentLocalWeather currentLocalWeather);
-        public int SaveCloud(Cloud clouds);
-        public int SaveWeather(Weather weather);
-        public int SaveWind(Wind wind);
-        public int SaveCoordinate(Coordinate coordinate);
-        void AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers);
-        //Task<bool> AttachLocalToOthers(int idLocal, int idCloud, int idWind, IList<int> idWeathers);
-        //void AttachLocalToWeather(int idLocal, IList<int> idWeathers);
-        //void AttachLocalToWind(int idLocal, int idWind);
-        //void AttachLocalToCloud(int idLocal, int idCloud);
+        public int SaveLocal(Local local, DateTime createdDate);
+        public int SaveCurrentLocalWeather(int idLocal, int idCloud, int idWind, int idCoordinate, int idSysAttributes, int idAtmosphereConditions, DateTime createdDate);
+        public int SaveCloud(Cloud clouds, DateTime createdDate);
+        public int SaveWeather(Weather weather, DateTime createdDate);
+        public int SaveWind(Wind wind, DateTime createdDate);
+        public int SaveCoordinate(Coordinate coordinate, DateTime createdDate);
+        public int SaveAtmosphereConditions(AtmosphereConditions main, DateTime createdDate);
+        public int SaveSysAttributes(Sys sys, DateTime createdDate);
+        public bool AttachCurrentLocalWeatherToWeather(int idCurrentLocalWeather, IList<int> idWeathers, DateTime createdDate);        
         public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate);
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using WeatherAPI.Core.Configuration;
 using WeatherAPI.Core.Services.OpenWeather;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 using WeatherAPI.Infra.Http.Extensions;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
 using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Object;
 
 namespace WeatherAPI.Infra.Http.OpenWeather
