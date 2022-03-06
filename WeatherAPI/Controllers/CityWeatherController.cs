@@ -16,23 +16,19 @@ namespace WeatherAPI.Controllers
         public CityWeatherController(IQueryExecutor queryExecutor)
         {
             _queryExecutor = queryExecutor;
-        }
-        public string Get()
-        {
-            return "Teste";
-        }
+        }        
+        [HttpGet]
         public IActionResult GetWeatherFromCityByDate([FromBody] WeatherFromCityByDateViewModel weatherFromCityByDateViewModel)
         {
-            var query = new GetWeatherFromCityByDateQuery(weatherFromCityByDateViewModel.City, weatherFromCityByDateViewModel.InitialDate, weatherFromCityByDateViewModel.FinalDate);
+            //var query = new GetWeatherFromCityByDateQuery(weatherFromCityByDateViewModel.City, weatherFromCityByDateViewModel.InitialDate, weatherFromCityByDateViewModel.FinalDate);
 
-            var result = _queryExecutor.Execute<GetWeatherFromCityByDateQuery, IEnumerable<WeatherFromCityByDateDto>>(query);
+            //var result = _queryExecutor.Execute<GetWeatherFromCityByDateQuery, IEnumerable<WeatherFromCityByDateDto>>(query);
 
-            if (result.Any())
-                return Ok(result);
-            else
-                return NotFound();
+            //if ((result !=null) && result.Any())
+            //    return Ok(result);
+            //else
+            //    return NotFound();
+            return Ok("Se fudeu");
         }
-
-
     }
 }

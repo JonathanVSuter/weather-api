@@ -9,7 +9,7 @@ using WeatherAPI.Core.Common.QueryHandler;
 using WeatherAPI.Core.Common.RequestHandler;
 using WeatherAPI.Core.Queries.OpenWeatherApi;
 using WeatherAPI.Core.Requests;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Modules
 {

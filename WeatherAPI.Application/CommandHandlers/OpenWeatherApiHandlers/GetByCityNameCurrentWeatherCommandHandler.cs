@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WeatherAPI.Core.Commands.OpenWeatherApiCommands;
 using WeatherAPI.Core.Common.CommandHandler;
 using WeatherAPI.Core.Repositories;
@@ -15,25 +16,22 @@ namespace WeatherAPI.Application.CommandHandlers.OpenWeatherApiHandlers
 
         public void Handle(GetByCityNameCurrentWeatherCommand command)
         {
-            var cloudId = _currentLocalWeatherRepository.SaveCloud(command.CurrentLocalWeather.Clouds);
-            var coordinateId = _currentLocalWeatherRepository.SaveCoordinate(command.CurrentLocalWeather.Coord);
-            var windId = _currentLocalWeatherRepository.SaveWind(command.CurrentLocalWeather.Wind);
+            DateTime registerDate = DateTime.Now;
+
+            var cloudId = _currentLocalWeatherRepository.SaveCloud(command.CurrentLocalWeather.Clouds, registerDate);
+            var coordinateId = _currentLocalWeatherRepository.SaveCoordinate(command.CurrentLocalWeather.Coord, registerDate);
+            var windId = _currentLocalWeatherRepository.SaveWind(command.CurrentLocalWeather.Wind, registerDate);
+            var sysId = _currentLocalWeatherRepository.SaveSysAttributes(command.CurrentLocalWeather.Sys, registerDate);
+            var atmosphereConditionsId = _currentLocalWeatherRepository.SaveAtmosphereConditions(command.CurrentLocalWeather.AtmosphereConditions, registerDate);
+            var localId = _currentLocalWeatherRepository.SaveLocal(command.CurrentLocalWeather.Local, registerDate);
+            var currentLocalWeatherId = _currentLocalWeatherRepository.SaveCurrentLocalWeather(localId,cloudId,windId,coordinateId,sysId,atmosphereConditionsId,registerDate);
+
             IList<int> weatherIds = new List<int>();
 
             foreach (var weather in command.CurrentLocalWeather.Weather)
-                weatherIds.Add(_currentLocalWeatherRepository.SaveWeather(weather));
+                weatherIds.Add(_currentLocalWeatherRepository.SaveWeather(weather, registerDate));
 
-            var localId = _currentLocalWeatherRepository.SaveCurrentLocalWeather(coordinateId, command.CurrentLocalWeather);
-
-            //add unitOfWork state
-
-            _currentLocalWeatherRepository.AttachLocalToOthers(localId, cloudId, windId, weatherIds);
-
-            //_currentLocalWeatherRepository.AttachLocalToCloud(localId, cloudId);
-
-            //_currentLocalWeatherRepository.AttachLocalToWeather(localId, weatherIds);
-
-            //_currentLocalWeatherRepository.AttachLocalToWind(localId, windId);
+            var attachCurrentWeatherToWeather = _currentLocalWeatherRepository.AttachCurrentLocalWeatherToWeather(currentLocalWeatherId, weatherIds, registerDate);
 
         }
     }

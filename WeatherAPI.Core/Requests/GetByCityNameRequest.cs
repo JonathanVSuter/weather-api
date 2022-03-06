@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WeatherAPI.Core.Common.Requests;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 
 namespace WeatherAPI.Core.Requests
 {

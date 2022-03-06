@@ -1,6 +1,6 @@
 ﻿namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business
 {
-    public class Main
+    public class AtmosphereConditions
     {
         public double Temp { get; }
         public double FeelsLike { get; }
@@ -8,7 +8,7 @@
         public double TempMax { get; }
         public int Pressure { get; }
         public int Humidity { get; }
-        public Main(double temp, double feelsLike, double tempMin, double tempMax, int pressure, int humidity)
+        public AtmosphereConditions(double temp, double feelsLike, double tempMin, double tempMax, int pressure, int humidity)
         {
             Temp = temp;
             FeelsLike = feelsLike;

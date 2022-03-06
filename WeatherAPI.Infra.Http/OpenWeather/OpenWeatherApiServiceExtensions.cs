@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using WeatherAPI.Core.Exceptions.Arguments;
-using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Dtos;
+using WeatherAPI.Core.Exceptions.Business;
+using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Dtos;
 using WeatherAPI.Infra.Http.OpenWeather.GetCurrentWeather.Object;
 
 namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
@@ -25,12 +26,18 @@ namespace WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather
                 Main = MainToDto(getCurrentWeatherObject.Main),
                 Sys = SysToDto(getCurrentWeatherObject.Sys),
                 Base = getCurrentWeatherObject.Base,
-                Cod = getCurrentWeatherObject.Cod,
                 Dt = getCurrentWeatherObject.Dt,
                 Id = getCurrentWeatherObject.Id,
-                Name = getCurrentWeatherObject.Name,
-                Timezone = getCurrentWeatherObject.Timezone,
-                Visibility = getCurrentWeatherObject.Visibility
+                Visibility = getCurrentWeatherObject.Visibility,
+                Local = LocalToDto(getCurrentWeatherObject.Name, getCurrentWeatherObject.Timezone)
+            };
+        }
+        public static LocalDto LocalToDto(string name, int timezone ) 
+        {            
+            return new LocalDto()
+            {                
+                Name = name,
+                Timezone = timezone
             };
         }
         public static SysDto SysToDto(Sys sys)

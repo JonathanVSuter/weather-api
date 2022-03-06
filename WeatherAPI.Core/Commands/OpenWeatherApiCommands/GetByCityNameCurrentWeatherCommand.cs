@@ -16,8 +16,8 @@ namespace WeatherAPI.Core.Commands.OpenWeatherApiCommands
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather.Clouds)} is null");
             if (currentLocalWeather.Coord is null)
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather.Coord)} is null");
-            if (currentLocalWeather.Main is null)
-                throw new BusinessException($"Parameter {nameof(currentLocalWeather.Main)} is null");
+            if (currentLocalWeather.AtmosphereConditions is null)
+                throw new BusinessException($"Parameter {nameof(currentLocalWeather.AtmosphereConditions)} is null");
             if (currentLocalWeather.Sys is null)
                 throw new BusinessException($"Parameter {nameof(currentLocalWeather.Sys)} is null");
             if (currentLocalWeather.Wind is null)
