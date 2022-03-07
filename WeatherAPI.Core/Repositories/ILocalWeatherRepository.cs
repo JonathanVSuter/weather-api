@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WeatherAPI.Core.Common.Pagination;
 using WeatherAPI.Core.Queries.OpenWeatherApi;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
 
@@ -16,6 +17,6 @@ namespace WeatherAPI.Core.Repositories
         public int SaveAtmosphereConditions(AtmosphereConditions main, DateTime createdDate);
         public int SaveSysAttributes(Sys sys, DateTime createdDate);
         public bool AttachCurrentLocalWeatherToWeather(int idCurrentLocalWeather, IList<int> idWeathers, DateTime createdDate);        
-        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate);
+        public IPaginatedQuery<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate);
     }
 }
