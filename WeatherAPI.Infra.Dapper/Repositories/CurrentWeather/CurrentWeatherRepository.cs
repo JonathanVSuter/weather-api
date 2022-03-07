@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using WeatherAPI.Core.Common.InfraOperations;
+using WeatherAPI.Core.Common.Pagination;
 using WeatherAPI.Core.Configuration;
 using WeatherAPI.Core.Queries.OpenWeatherApi;
 using WeatherAPI.Core.Repositories;
 using WeatherAPI.Core.Services.OpenWeather.GetCurrentWeather.Business;
+using WeatherAPI.Infra.Dapper.Extensions;
+using WeatherAPI.Infra.Dapper.Pagination;
 
 namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 {
@@ -377,17 +380,18 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return false;
             }
         }        
-        public IEnumerable<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate)
+        public IPaginatedQuery<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate)
         {
-            var sql = @"SELECT l.Name as CityName,
-                        lw.createdAt as CreatedDate,
-                        w.Main as WeatherDescription,
-                        w.Description SubDescription
-                        FROM Local l 
-                        LEFT JOIN Local_Weather lw ON l.Id = lw.fk_Local_Id
-                        LEFT JOIN Weather w ON lw.fk_Weather_Id = w.Id
-                        WHERE l.Name = @cityName 
-                        AND (lw.createdAt >= @startDate AND lw.createdAt <= @finalDate)";
+            var sql = @"SELECT l.Name AS CityName, 
+                               w.Main AS WeatherDescription, 
+                               w.Description AS SubDescription,
+                               clw.CreatedDate AS CreatedDate 
+                        FROM Current_Local_Weather c 
+                            LEFT JOIN Local l ON c.Local_Id = l.Id 
+                            LEFT JOIN Current_Local_Weather_Weather clw ON c.Id = clw.Current_Local_Weather_Weather_Id
+                            LEFT JOIN Weather w ON clw.Weather_Id= w.Id  
+                        WHERE clw.CreatedDate BETWEEN @startDate AND @finalDate
+                            AND l.Name = @cityName";
 
             var parameters = new
             {
@@ -398,7 +402,7 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
 
             using (var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection)) 
             {
-                var result = sqlConnection.Query<WeatherFromCityByDateDto>(sql, parameters);
+                var result = sqlConnection.Query<WeatherFromCityByDateDto>(sql, parameters, PaginationInfo.Default);
                 return result;
             } 
         }
