@@ -406,5 +406,37 @@ namespace WeatherAPI.Infra.Dapper.Repositories.CurrentWeather
                 return result;
             } 
         }
+        public LastAverageTemperatureDto GetLastAverageTemperature() 
+        {
+            var sql = @"SELECT SUM(Temp)/COUNT(Id) as AverageTemp 
+                        FROM (SELECT l.Name, a.Temp, c.Id, c.CreatedDate, ROW_NUMBER() OVER(PARTITION BY l.Name ORDER BY c.CreatedDate DESC ) AS rn FROM Current_Local_Weather c 
+                        INNER JOIN Atmosphere_condition a ON c.Atmosphere_conditions_Id = a.Id
+                        INNER JOIN Local l ON c.Local_Id = l.Id) AS T WHERE rn = 1";
+
+            using (var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection))
+            {
+                var result = sqlConnection.QueryFirstOrDefault<LastAverageTemperatureDto>(sql);
+                return result;
+            }
+        }
+        public LastAverageTemperatureCityDto GetLastAverageTemperatureByCity(string city) 
+        {
+            var sql = @"SELECT SUM(Temp)/COUNT(Id) as AverageTemp, Name as CityName 
+                        FROM (SELECT l.Name, a.Temp, c.Id, c.CreatedDate, ROW_NUMBER() OVER(PARTITION BY l.Name ORDER BY c.CreatedDate DESC ) AS rn FROM Current_Local_Weather c 
+                        INNER JOIN Atmosphere_condition a ON c.Atmosphere_conditions_Id = a.Id
+                        INNER JOIN Local l ON c.Local_Id = l.Id
+						where l.Name = @city) AS T WHERE rn = 1 group by Name";
+
+            var parameters = new
+            {
+                city
+            };
+
+            using (var sqlConnection = new SqlConnection(_options.Value.SqlServerConnection))
+            {
+                var result = sqlConnection.QueryFirstOrDefault<LastAverageTemperatureCityDto>(sql, parameters);
+                return result;
+            }
+        }
     }
 }

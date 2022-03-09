@@ -22,6 +22,8 @@ namespace WeatherAPI.Modules
             builder.RegisterType<GetByCityNameRequestHandler>().As<IRequestHandler<GetByCityNameRequest, CurrentLocalWeatherDto>>();
             builder.RegisterType<GetByCityNameCurrentWeatherCommandHandler>().As<ICommandHandler<GetByCityNameCurrentWeatherCommand>>();
             builder.RegisterType<GetWeatherFromCityByDateQueryHandler>().As<IQueryHandler<GetWeatherFromCityByDateQuery, IPaginatedQuery<WeatherFromCityByDateDto>>>();
+            builder.RegisterType<GetLastAverageTemperatureQueryHandler>().As<IQueryHandler<GetLastAverageTemperatureQuery, LastAverageTemperatureDto>>();
+            builder.RegisterType<GetLastAverageTemperatureByCityQueryHandler>().As<IQueryHandler<GetLastAverageTemperatureByCityQuery, LastAverageTemperatureCityDto>>();
         }
     }
 }

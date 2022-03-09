@@ -18,5 +18,7 @@ namespace WeatherAPI.Core.Repositories
         public int SaveSysAttributes(Sys sys, DateTime createdDate);
         public bool AttachCurrentLocalWeatherToWeather(int idCurrentLocalWeather, IList<int> idWeathers, DateTime createdDate);        
         public IPaginatedQuery<WeatherFromCityByDateDto> GetWeatherFromCityByDate(string cityName, string startDate, string finalDate);
+        public LastAverageTemperatureDto GetLastAverageTemperature();
+        public LastAverageTemperatureCityDto GetLastAverageTemperatureByCity(string city);
     }
 }

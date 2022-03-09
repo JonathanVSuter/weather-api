@@ -27,9 +27,27 @@ namespace WeatherAPI.Controllers
 
             return Ok(new { result });
         }
+        [HttpGet] 
+        public IActionResult GetLastAverageTemperature() 
+        {
+            var query = new GetLastAverageTemperatureQuery();
 
-        //Temperatura média atual (do momento);
-        //Temperatura média atual por cidade;
+            var lastAverageTemperature = _queryExecutor.Execute<GetLastAverageTemperatureQuery, LastAverageTemperatureDto>(query);
+
+            return Ok(new { lastAverageTemperature });
+        }
+        [HttpGet]
+        public IActionResult GetLastAverageTemperatureByCity(string city)
+        {
+            var query = new GetLastAverageTemperatureByCityQuery(city);
+
+            var lastAverageTemperatureByCity = _queryExecutor.Execute<GetLastAverageTemperatureByCityQuery, LastAverageTemperatureCityDto>(query);
+
+            return Ok(new { lastAverageTemperatureByCity });
+        }
+        /*--------------------------------- Ideias de consultas e operações para fazer com a base ---------------------------------*/
+        //Temperatura média atual (do momento)-- GetLastAverageTemperature (ok);
+        //Temperatura média atual por cidade-- GetLastAverageTemperatureByCity (ok);
         //Cidade com a temperatura mais quente (no momento e no geral);
         //Cidade com temperatura mais fria (no momento e no geral);
         //Temperatura média do dia, fazer isso por cidade e geral (ver se tem como separar por regiões));
